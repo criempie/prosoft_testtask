@@ -1,0 +1,14 @@
+.table {
+  font-size: large;
+}
+
+.table__row {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: auto 24px 130px;
+  padding: 6px 12px;
+  border: 1px solid black;
+}
+
+.table__cell {
+}
