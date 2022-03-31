@@ -1,3 +1,14 @@
+<Modal *ngIf="modalAddConsumerFlag"
+       title="Добавление потребителя"
+       [onClose]="closeModalAddConsumer">
+  <div>
+    <MyForm [controlsConfig]="controlsConfig"></MyForm>
+  </div>
+</Modal>
+
 <div class="app-container">
-  <table></table>
+  <header>
+    <button (click)="openModalAddConsumer()">Добавить потребителя</button>
+  </header>
+  <Table></Table>
 </div>

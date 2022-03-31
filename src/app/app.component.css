@@ -1,4 +1,7 @@
 .app-container {
   display: flex;
-  justify-content: center;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  z-index: 0;
 }
