@@ -1,0 +1,19 @@
+.text-input {
+
+}
+
+.text-input__label {
+  display: block;
+  font-size: 18px;
+  padding-left: 4px;
+}
+
+.text-input__input {
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  padding: 6px;
+  outline: none;
+  border-radius: 7px;
+  border: 1px solid cornflowerblue;
+}
