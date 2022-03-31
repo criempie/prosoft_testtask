@@ -1,0 +1,18 @@
+<form [formGroup]="form"
+      class="form">
+  <main class="form__inputs-container">
+    <ng-container *ngFor="let key of controlsConfigKeys">
+      <MyInput *ngIf="controlsConfig[key].type === inputTypes.inputtext"
+               [value]="controlsConfig[key].initValue"
+               [label]="controlsConfig[key].inputTitle"
+               [placeholder]="controlsConfig[key].inputPlaceholder"
+               [formControlName]="key">
+      </MyInput>
+      <MySelect *ngIf="controlsConfig[key].type === inputTypes.select"
+                [options]="controlsConfig[key].selectOptions"
+                [formControlName]="key">
+      </MySelect>
+    </ng-container>
+
+  </main>
+</form>
