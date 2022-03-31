@@ -7,10 +7,8 @@ type consumer = {
   number: number
 };
 
-
-
 @Component({
-  selector: 'table',
+  selector: 'Table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
