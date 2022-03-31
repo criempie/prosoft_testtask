@@ -9,6 +9,7 @@
                [formControlName]="key">
       </MyInput>
       <MySelect *ngIf="controlsConfig[key].type === inputTypes.select"
+                [label]="controlsConfig[key].inputTitle"
                 [options]="controlsConfig[key].selectOptions"
                 [formControlName]="key">
       </MySelect>

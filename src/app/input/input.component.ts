@@ -54,6 +54,12 @@ export class InputComponent implements ControlValueAccessor, Validator {
 
   public registerOnTouched(fn: any) {}
 
+  public onInputChange(target: any) {
+    const element = <HTMLInputElement>target;
+
+    this.onChange(element.value);
+  }
+
   public validate(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
 

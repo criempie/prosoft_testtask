@@ -1,5 +1,10 @@
-<select>
-  <option *ngFor="let o of options"
-          [value]="o.value"
-          [label]="o.title"></option>
-</select>
+<div class="select">
+  <label class="select__label">
+    <strong>{{ label }}</strong>
+  </label>
+  <select (change)="onSelectChange($event.target)">
+    <option *ngFor="let o of options"
+            [value]="o.value"
+            [label]="o.title"></option>
+  </select>
+</div>

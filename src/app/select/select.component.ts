@@ -16,6 +16,9 @@ export class SelectComponent implements ControlValueAccessor {
   @Input()
   options?: selectOption[] = [];
 
+  @Input()
+  label?: string;
+
   private _value: string;
 
   get value() {
@@ -42,4 +45,9 @@ export class SelectComponent implements ControlValueAccessor {
 
   public registerOnTouched(fn: any) {}
 
+  public onSelectChange(target: any) {
+    const element = <HTMLSelectElement>target;
+
+    this.onChange(element.value);
+  }
 }
