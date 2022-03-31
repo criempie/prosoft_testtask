@@ -1,0 +1,16 @@
+<div class="modal">
+  <div class="modal__wrap">
+    <div class="modal__window">
+      <header class="modal__header">
+        <h1>{{ title }}</h1>
+        <img class="icon icon_clickable"
+             src="./assets/cross.svg"
+             alt="cross"
+             (click)="onClose()"/>
+      </header>
+      <main>
+        <ng-content></ng-content>
+      </main>
+    </div>
+  </div>
+</div>
