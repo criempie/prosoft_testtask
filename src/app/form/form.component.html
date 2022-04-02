@@ -6,14 +6,16 @@
                [value]="controlsConfig[key].initValue"
                [label]="controlsConfig[key].inputTitle"
                [placeholder]="controlsConfig[key].inputPlaceholder"
+               [errors]="form.controls[key].errors"
                [formControlName]="key">
       </MyInput>
       <MySelect *ngIf="controlsConfig[key].type === inputTypes.select"
                 [label]="controlsConfig[key].inputTitle"
                 [options]="controlsConfig[key].selectOptions"
+                [errors]="form.controls[key].errors"
                 [formControlName]="key">
       </MySelect>
     </ng-container>
-
+    <button class="form__button" (click)="submit()">Добавить</button>
   </main>
 </form>

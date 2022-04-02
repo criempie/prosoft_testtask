@@ -3,8 +3,11 @@
     <strong>{{ label }}</strong>
   </label>
   <select (change)="onSelectChange($event.target)">
+    <option></option>
     <option *ngFor="let o of options"
             [value]="o.value"
             [label]="o.title"></option>
   </select>
+  <span *ngFor="let e of errors"
+        class="select__error">{{ e }}</span>
 </div>

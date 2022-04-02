@@ -1,10 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import {
-  AbstractControl,
   ControlValueAccessor,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR, ValidationErrors,
-  Validator
+  NG_VALUE_ACCESSOR, ValidationErrors
 } from "@angular/forms";
 
 @Component({
@@ -14,25 +11,36 @@ import {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: InputComponent,
+      useExisting: forwardRef(() => InputComponent),
       multi: true
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: InputComponent,
-      multi: true
-    }],
+    }
+  ],
 })
-export class InputComponent implements ControlValueAccessor, Validator {
+export class InputComponent implements ControlValueAccessor {
   @Input()
   label?: string;
 
   @Input()
   placeholder?: string;
 
+  private _errors: string[] = [];
+
+  @Input()
+  set errors(errors: ValidationErrors | null) {
+    if (errors) {
+      this._errors = Object.values(errors);
+    } else {
+      this._errors = [];
+    }
+  }
+
+  get errors(): string[] {
+    return this._errors;
+  }
+
   private _value: string;
 
-  get value() {
+  get value(): string {
     return this._value;
   }
 
@@ -58,13 +66,5 @@ export class InputComponent implements ControlValueAccessor, Validator {
     const element = <HTMLInputElement>target;
 
     this.onChange(element.value);
-  }
-
-  public validate(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-
-    return {
-      error: "validation error"
-    }
   }
 }

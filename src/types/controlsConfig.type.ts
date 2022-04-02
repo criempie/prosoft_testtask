@@ -1,3 +1,5 @@
+import { ValidatorFn } from "@angular/forms";
+
 export enum inputTypes {
   inputtext,
   select,
@@ -8,10 +10,10 @@ export interface controlsConfig {
     initValue: any,
     type: inputTypes,
     selectOptions?: selectOption[],
-    validator?: (value: any) => boolean,
+    validator?: ValidatorFn,
     inputTitle?: string,
     inputPlaceholder?: string,
-  }
+  };
 }
 
 export interface selectOption {

@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, ValidationErrors } from "@angular/forms";
 import { selectOption } from "../../types/controlsConfig.type";
 
 @Component({
@@ -21,14 +21,28 @@ export class SelectComponent implements ControlValueAccessor {
 
   private _value: string;
 
-  get value() {
-    return this._value;
-  }
-
   @Input()
   set value(v: string) {
     this._value = v;
     this.onChange(this._value);
+  }
+
+  get value() {
+    return this._value;
+  }
+
+  private _errors: string[] = [];
+  @Input()
+  set errors(errors: ValidationErrors | null) {
+    if (errors) {
+      this._errors = Object.values(errors);
+    } else {
+      this._errors = [];
+    }
+  }
+
+  get errors(): string[] {
+    return this._errors;
   }
 
   constructor() { }

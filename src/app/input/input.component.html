@@ -4,5 +4,11 @@
   </label>
   <input placeholder="{{ placeholder }}"
          class="text-input__input"
-         (change)="onInputChange($event.target)" />
+         (change)="onInputChange($event.target)"/>
+  <div class="errors">
+    <div class="errors__container">
+      <span *ngFor="let e of errors"
+            class="errors__error">{{ e }}</span>
+    </div>
+  </div>
 </div>

@@ -2,40 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { controlsConfig, inputTypes } from "../../types/controlsConfig.type";
 
-class Consumer {
-  name: string;
-  type: 1 | 2;
-  number: number;
-
-  constructor(
-    name: string,
-    type: 1 | 2,
-    number: number
-  ) {
-    if (Consumer.nameValidator(name)) this.name = name;
-    if (Consumer.typeValidator(type)) this.type = type;
-    if (Consumer.numberValidator(number)) this.number = number;
-  }
-
-  static nameValidator(name: string): boolean {
-    return Boolean(
-      name && name.length <= 255
-    );
-  };
-
-  static typeValidator(type: 1 | 2): boolean {
-    return Boolean(
-      type
-    );
-  };
-
-  static numberValidator(number: number): boolean {
-    return Boolean(
-      number && number.toString().length === 13
-    );
-  };
-}
-
 @Component({
   selector: 'MyForm',
   templateUrl: './form.component.html',
@@ -57,17 +23,22 @@ export class FormComponent implements OnInit {
     const config: { [key: string]: any } = {};
     Object.keys(this.controlsConfig)
           .forEach((key: string) => {
-            config[key] = this.controlsConfig[key].initValue;
+            config[key] = [ this.controlsConfig[key].initValue, this.controlsConfig[key].validator ];
           })
     this.form = this.fb.group(config);
 
-    setInterval(() => {
-      console.log(this.form.value);
-    }, 1000)
+    //setInterval(() => {
+    //  console.log(this.form);
+    //}, 1000)
+  }
+
+  public isValid(): boolean {
+    return Object.values(this.form.controls)
+                 .every((control) => !control.errors)
   }
 
   submit = () => {
-    console.log(123123)
+    console.log(this.isValid())
   }
 
 }

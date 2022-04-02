@@ -30,3 +30,16 @@ h1 {
 .icon_clickable:hover {
   cursor: pointer;
 }
+
+.errors {
+
+}
+
+.errors__container {
+
+}
+
+.errors__error {
+  color: red;
+  display: block;
+}
