@@ -8,6 +8,10 @@
             [value]="o.value"
             [label]="o.title"></option>
   </select>
-  <span *ngFor="let e of errors"
-        class="select__error">{{ e }}</span>
+  <div class="errors">
+    <div class="errors__container">
+      <span *ngFor="let e of errors"
+            class="errors__error">{{ e }}</span>
+    </div>
+  </div>
 </div>
