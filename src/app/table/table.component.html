@@ -1,13 +1,18 @@
 <div class="table">
   <header></header>
   <main>
-    <div class="table__row" *ngFor="let con of consumers">
-      <div class="table__cell">{{ con.name }}</div>
-      <div title="{{ con.type === 1 ? 'Физическое лицо' : 'Юридическое лицо' }}"
-           class="table__cell">
-        {{ con.type === 1 ? "Ф" : "Ю" }}
-      </div>
-      <div class="table__cell">{{ con.number }}</div>
+    <div *ngFor="let element of data" class="table__row">
+      <ng-container *ngFor="let key of Object.keys(element)">
+        <div *ngIf="disabledFields && !disabledFields.includes(key)"
+          class="table__cell">
+          {{ formatters
+        && formatters[key]
+        && formatters[key](element[key])
+        || element[key] }}
+        </div>
+      </ng-container>
+
+
     </div>
   </main>
 </div>

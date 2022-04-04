@@ -5,18 +5,28 @@ export enum inputTypes {
   select,
 }
 
-export interface controlsConfig {
+export interface controlsConfigInterface {
   [key: string]: {
     initValue: any,
     type: inputTypes,
-    selectOptions?: selectOption[],
+    selectOptions?: selectOptionInterface[],
     validator?: ValidatorFn,
     inputTitle?: string,
     inputPlaceholder?: string,
   };
 }
 
-export interface selectOption {
-  title: string,
-  value: number
+export interface selectOptionInterface {
+  title: string;
+  value: number;
+}
+
+export interface ConsumerWithoutIdInterface {
+  name: string;
+  type: 1 | 2;
+  number: number;
+}
+
+export interface ConsumerInterface extends ConsumerWithoutIdInterface {
+  id: number;
 }

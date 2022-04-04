@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
-import { controlsConfig, inputTypes } from "../types/controlsConfig.type";
+import { Component, OnInit } from '@angular/core';
+import { ConsumerInterface, controlsConfigInterface, inputTypes } from "../types/controlsConfig.type";
+import { APIUrl } from "../config";
+import { PlugService } from "./services/plug.service";
 
 const REQUIRED = () => 'Поле обязательно';
-const MAX_LENGTH = (length: number | string) => `Максимальная длина ${length}`;
-const EQUAL_LENGTH = (length: number | string) => `Необходима длина ${length}`;
+const MAX_LENGTH = (length: number | string) => `Максимальная длина ${ length }`;
+const EQUAL_LENGTH = (length: number | string) => `Необходима длина ${ length }`;
 
-const controlsConfig: controlsConfig = {
+
+const controlsConfig: controlsConfigInterface = {
   name: {
     initValue: '',
     type: inputTypes.inputtext,
@@ -24,7 +27,7 @@ const controlsConfig: controlsConfig = {
     inputPlaceholder: 'Введите имя...'
   },
   type: {
-    initValue: '',
+    initValue: null,
     type: inputTypes.select,
     selectOptions: [
       {
@@ -70,12 +73,33 @@ const controlsConfig: controlsConfig = {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  modalAddConsumerFlag = true;
-  controlsConfig: controlsConfig = controlsConfig;
+export class AppComponent implements OnInit {
+  modalAddConsumerFlag = false;
+  controlsConfig: controlsConfigInterface = controlsConfig;
 
-  constructor() {
+  consumers: ConsumerInterface[] = [];
+  consumerFormatters: {[key: string]: (v: any) => any} = {
+    name: (v) => v,
+    type: (v) => v === '1' ? "Ф" : v === '2' ? "Ю" : null,
+    number: (v) => v
+  }
+
+  constructor(private plugService: PlugService) {
     this.closeModalAddConsumer = this.closeModalAddConsumer.bind(this);
+  }
+
+  public ngOnInit() {
+    if (APIUrl) {
+      fetch(`${ APIUrl }/consumers`, {
+        method: 'GET',
+      })
+        .then(response => {
+          response.json()
+                  .then(data => this.consumers = data);
+        })
+    } else {
+      this.consumers = this.plugService.getConsumers();
+    }
   }
 
   openModalAddConsumer(): void {

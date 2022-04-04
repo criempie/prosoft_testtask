@@ -2,7 +2,9 @@
        title="Добавление потребителя"
        [onClose]="closeModalAddConsumer">
   <div>
-    <MyForm [controlsConfig]="controlsConfig"></MyForm>
+    <MyForm [controlsConfig]="controlsConfig"
+            (onSubmit)="closeModalAddConsumer()">
+    </MyForm>
   </div>
 </Modal>
 
@@ -10,5 +12,8 @@
   <header>
     <button (click)="openModalAddConsumer()">Добавить потребителя</button>
   </header>
-  <Table></Table>
+  <MyTable [data]="consumers"
+           [formatters]="consumerFormatters"
+           [disabledFields]="['id']">
+  </MyTable>
 </div>

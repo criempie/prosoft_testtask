@@ -1,6 +1,6 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, ValidationErrors } from "@angular/forms";
-import { selectOption } from "../../types/controlsConfig.type";
+import { selectOptionInterface } from "../../types/controlsConfig.type";
 
 @Component({
   selector: 'MySelect',
@@ -14,14 +14,13 @@ import { selectOption } from "../../types/controlsConfig.type";
 })
 export class SelectComponent implements ControlValueAccessor {
   @Input()
-  options?: selectOption[] = [];
+  options?: selectOptionInterface[] = [];
 
   @Input()
   label?: string;
 
   private _value: string;
 
-  @Input()
   set value(v: string) {
     this._value = v;
     this.onChange(this._value);
@@ -62,6 +61,6 @@ export class SelectComponent implements ControlValueAccessor {
   public onSelectChange(target: any) {
     const element = <HTMLSelectElement>target;
 
-    this.onChange(element.value);
+    this.value = element.value;
   }
 }

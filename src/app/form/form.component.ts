@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { controlsConfig, inputTypes } from "../../types/controlsConfig.type";
+import { ConsumerWithoutIdInterface, controlsConfigInterface, inputTypes } from "../../types/controlsConfig.type";
+import { PlugService } from "../services/plug.service";
+import { APIUrl } from "../../config";
 
 @Component({
   selector: 'MyForm',
@@ -10,26 +12,47 @@ import { controlsConfig, inputTypes } from "../../types/controlsConfig.type";
 export class FormComponent implements OnInit {
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private plugService: PlugService) {}
 
   @Input()
-  controlsConfig: controlsConfig;
+  controlsConfig: controlsConfigInterface;
 
   controlsConfigKeys: string[];
   inputTypes = inputTypes;
+
+  @Output()
+  onSubmit: any = new EventEmitter;
 
   public ngOnInit() {
     this.controlsConfigKeys = Object.keys(this.controlsConfig);
     const config: { [key: string]: any } = {};
     Object.keys(this.controlsConfig)
           .forEach((key: string) => {
-            config[key] = [ this.controlsConfig[key].initValue, this.controlsConfig[key].validator ];
+            config[key] = [this.controlsConfig[key].initValue, this.controlsConfig[key].validator];
           })
     this.form = this.fb.group(config);
+  }
 
-    //setInterval(() => {
-    //  console.log(this.form);
-    //}, 1000)
+  private static _transformToConsumer(data: any) {
+    return <ConsumerWithoutIdInterface>{
+      name: data.name,
+      type: data.type,
+      number: data.number,
+    }
+  }
+
+  private _putNewConsumer(consumer: ConsumerWithoutIdInterface, callback?: (() => void) | null) {
+    if (APIUrl) {
+      fetch(`${ APIUrl }/consumers`, {
+        method: 'PUT',
+        body: JSON.stringify(consumer)
+      })
+        .then(() => callback && callback())
+        .catch(() => callback && callback())
+    } else {
+      this.plugService.putConsumer(consumer);
+      if (callback) callback();
+    }
   }
 
   public isValid(): boolean {
@@ -38,7 +61,9 @@ export class FormComponent implements OnInit {
   }
 
   submit = () => {
-    console.log(this.isValid())
+    if (this.isValid()) {
+      this._putNewConsumer(FormComponent._transformToConsumer(this.form.value), () => {this.onSubmit && this.onSubmit.emit()})
+    }
   }
 
 }
