@@ -5,9 +5,10 @@
 .table__row {
   display: grid;
   gap: 1em;
-  grid-template-columns: auto 24px 130px;
+  grid-template-columns: auto 24px 130px 24px;
   padding: 6px 12px;
   border: 1px solid black;
+  align-items: center;
 }
 
 .table__cell {

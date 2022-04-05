@@ -3,10 +3,12 @@
     <div class="modal__window">
       <header class="modal__header">
         <h1>{{ title }}</h1>
-        <img class="icon icon_clickable"
-             src="./assets/cross.svg"
-             alt="cross"
-             (click)="onClose()"/>
+        <div class="icon">
+          <img class="icon__image clickable"
+               src="./assets/cross.svg"
+               alt="cross"
+               (click)="onClose()"/>
+        </div>
       </header>
       <main>
         <ng-content></ng-content>

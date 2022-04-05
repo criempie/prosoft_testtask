@@ -4,13 +4,22 @@
     <div *ngFor="let element of data" class="table__row">
       <ng-container *ngFor="let key of Object.keys(element)">
         <div *ngIf="disabledFields && !disabledFields.includes(key)"
-          class="table__cell">
+             class="table__cell">
           {{ formatters
         && formatters[key]
         && formatters[key](element[key])
         || element[key] }}
         </div>
       </ng-container>
+      <div *ngFor="let button of buttons"
+           class="table__cell">
+        <div class="icon">
+          <img (click)="button.onClick(element.id)"
+               src="{{ '../../assets/trash.svg' }}"
+               alt="{{ button.alt }}"
+               class="icon__image clickable"/>
+        </div>
+      </div>
 
 
     </div>

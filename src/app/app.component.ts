@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConsumerInterface, controlsConfigInterface, inputTypes } from "../types/controlsConfig.type";
 import { APIUrl } from "../config";
 import { PlugService } from "./services/plug.service";
+import { buttonInColumn } from "./table/table.component";
 
 const REQUIRED = () => 'Поле обязательно';
 const MAX_LENGTH = (length: number | string) => `Максимальная длина ${ length }`;
@@ -78,14 +79,21 @@ export class AppComponent implements OnInit {
   controlsConfig: controlsConfigInterface = controlsConfig;
 
   consumers: ConsumerInterface[] = [];
-  consumerFormatters: {[key: string]: (v: any) => any} = {
+  consumerFormatters: { [key: string]: (v: any) => any } = {
     name: (v) => v,
     type: (v) => v === '1' ? "Ф" : v === '2' ? "Ю" : null,
     number: (v) => v
   }
+  consumerTableButtons: buttonInColumn[] = [
+    {
+      iconPath: "./src/asserts/trash.svg",
+      onClick: this.deleteConsumer.bind(this)
+    }
+  ]
 
   constructor(private plugService: PlugService) {
     this.closeModalAddConsumer = this.closeModalAddConsumer.bind(this);
+    //this.deleteConsumer = this.deleteConsumer.bind(this);
   }
 
   public ngOnInit() {
@@ -98,7 +106,8 @@ export class AppComponent implements OnInit {
                   .then(data => this.consumers = data);
         })
     } else {
-      this.consumers = this.plugService.getConsumers();
+      this.consumers = this.plugService.consumers;
+      this.plugService.subscribe((v) => {this.consumers = v});
     }
   }
 
@@ -110,4 +119,14 @@ export class AppComponent implements OnInit {
     this.modalAddConsumerFlag = false;
   }
 
+  deleteConsumer(id: number) {
+    if (APIUrl) {
+      fetch(`${ APIUrl }/consumers`, {
+        method: 'DELETE',
+        body: JSON.stringify({ id })
+      })
+    } else {
+      this.plugService.deleteConsumer(id);
+    }
+  }
 }

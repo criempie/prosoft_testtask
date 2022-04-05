@@ -1,29 +1,36 @@
 import { Injectable } from '@angular/core';
 import { ConsumerInterface, ConsumerWithoutIdInterface } from "../../types/controlsConfig.type";
+import { Subject, Subscription } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlugService {
-  private _consumers: ConsumerInterface[] = [];
+  private readonly _consumers: Subject<ConsumerInterface[]>;
+  private _consumersValue: ConsumerInterface[];
 
   get consumers() {
-    return this._consumers;
-  }
-
-  getConsumers(): ConsumerInterface[] {
-    return this._consumers;
+    return this._consumersValue;
   }
 
   putConsumer(consumer: ConsumerWithoutIdInterface) {
-    this._consumers.push(<ConsumerInterface>{
+    this._consumersValue.push(<ConsumerInterface>{
       ...consumer,
       id: Date.now()
     })
   }
 
-  constructor() {
-    this._consumers = require("../../consumers.plug.json").consumers;
+  deleteConsumer(id: number) {
+    this._consumers.next(this._consumersValue.filter(v => v.id !== id));
+  }
 
+  subscribe(func: (v: any) => void): Subscription {
+    return this._consumers.subscribe(func);
+  }
+
+  constructor() {
+    this._consumers = new Subject();
+    this._consumers.subscribe(v => {this._consumersValue = v});
+    this._consumers.next(require("../../consumers.plug.json").consumers);
   }
 }
