@@ -24,6 +24,17 @@ export class PlugService {
     this._consumers.next(this._consumersValue.filter(v => v.id !== id));
   }
 
+  editConsumer(consumer: ConsumerInterface) {
+    const editableIndex = this._consumersValue.findIndex(c => c.id === consumer.id);
+
+    if (editableIndex !== -1) {
+      const newConsumers = this._consumersValue.slice();
+      newConsumers[editableIndex] = consumer;
+
+      this._consumers.next(newConsumers);
+    }
+  }
+
   subscribe(func: (v: any) => void): Subscription {
     return this._consumers.subscribe(func);
   }

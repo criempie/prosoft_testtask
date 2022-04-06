@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { ConsumerWithoutIdInterface, controlsConfigInterface, inputTypes } from "../../types/controlsConfig.type";
-import { PlugService } from "../services/plug.service";
-import { APIUrl } from "../../config";
+import { controlsConfigInterface, inputTypes } from "../../types/controlsConfig.type";
 
 @Component({
   selector: 'MyForm',
@@ -12,16 +10,23 @@ import { APIUrl } from "../../config";
 export class FormComponent implements OnInit {
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private plugService: PlugService) {}
+  constructor(private fb: FormBuilder) {}
 
   @Input()
   controlsConfig: controlsConfigInterface;
 
   controlsConfigKeys: string[];
+
+  @Input()
+  submitButtonText?: string = 'Подтвердить';
+
+  @Input()
+  outputFormat?: (values: { [key: string]: any }) => { [key: string]: any };
+
   inputTypes = inputTypes;
 
   @Output()
-  onSubmit: any = new EventEmitter;
+  onSubmit: EventEmitter<any> = new EventEmitter;
 
   public ngOnInit() {
     this.controlsConfigKeys = Object.keys(this.controlsConfig);
@@ -33,28 +38,6 @@ export class FormComponent implements OnInit {
     this.form = this.fb.group(config);
   }
 
-  private static _transformToConsumer(data: any) {
-    return <ConsumerWithoutIdInterface>{
-      name: data.name,
-      type: data.type,
-      number: data.number,
-    }
-  }
-
-  private _putNewConsumer(consumer: ConsumerWithoutIdInterface, callback?: (() => void) | null) {
-    if (APIUrl) {
-      fetch(`${ APIUrl }/consumers`, {
-        method: 'PUT',
-        body: JSON.stringify(consumer)
-      })
-        .then(() => callback && callback())
-        .catch(() => callback && callback())
-    } else {
-      this.plugService.putConsumer(consumer);
-      if (callback) callback();
-    }
-  }
-
   public isValid(): boolean {
     return Object.values(this.form.controls)
                  .every((control) => !control.errors)
@@ -62,7 +45,9 @@ export class FormComponent implements OnInit {
 
   submit = () => {
     if (this.isValid()) {
-      this._putNewConsumer(FormComponent._transformToConsumer(this.form.value), () => {this.onSubmit && this.onSubmit.emit()})
+      this.onSubmit.emit(this.outputFormat
+                         ? this.outputFormat(this.form.value)
+                         : this.form.value);
     }
   }
 

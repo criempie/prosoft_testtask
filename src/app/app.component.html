@@ -1,11 +1,21 @@
-<Modal *ngIf="modalAddConsumerFlag"
+<Modal *ngIf="modalFlags.addConsumer"
        title="Добавление потребителя"
-       [onClose]="closeModalAddConsumer">
-  <div>
-    <MyForm [controlsConfig]="controlsConfig"
-            (onSubmit)="closeModalAddConsumer()">
-    </MyForm>
-  </div>
+       (onClose)="closeModalAddConsumer()">
+  <MyForm [controlsConfig]="controlsConfig"
+          [outputFormat]="addConsumerOutputFormat"
+          [submitButtonText]="'Добавить'"
+          (onSubmit)="addConsumer($event)">
+  </MyForm>
+</Modal>
+
+<Modal *ngIf="modalFlags.editConsumer"
+       title="Редактирование потребителя"
+       (onClose)="closeModalEditConsumer()">
+  <MyForm [controlsConfig]="controlsConfigForEdit"
+          [submitButtonText]="'Редактировать'"
+          [outputFormat]="editConsumerOutputFormat"
+          (onSubmit)="editConsumer($event)">
+  </MyForm>
 </Modal>
 
 <div class="app-container">
@@ -15,6 +25,7 @@
   <MyTable [data]="consumers"
            [formatters]="consumerFormatters"
            [disabledFields]="['id']"
-           [buttons]="consumerTableButtons">
+           [buttons]="consumerTableButtons"
+           [gridTemplateColumns]="['auto', '24px', '130px']">
   </MyTable>
 </div>

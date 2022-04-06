@@ -6,6 +6,7 @@
     <option></option>
     <option *ngFor="let o of options"
             [value]="o.value"
+            [defaultSelected]="defaultSelected === o.value"
             [label]="o.title"></option>
   </select>
   <div class="errors">

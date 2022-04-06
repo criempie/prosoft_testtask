@@ -1,7 +1,9 @@
 <div class="table">
   <header></header>
   <main>
-    <div *ngFor="let element of data" class="table__row">
+    <div *ngFor="let element of data"
+         class="table__row"
+         [ngStyle]="{gridTemplateColumns: gridTemplateColumns.join(' ')}">
       <ng-container *ngFor="let key of Object.keys(element)">
         <div *ngIf="disabledFields && !disabledFields.includes(key)"
              class="table__cell">
@@ -14,8 +16,8 @@
       <div *ngFor="let button of buttons"
            class="table__cell">
         <div class="icon">
-          <img (click)="button.onClick(element.id)"
-               src="{{ '../../assets/trash.svg' }}"
+          <img (click)="button.onClick(element)"
+               src="{{ button.iconPath }}"
                alt="{{ button.alt }}"
                class="icon__image clickable"/>
         </div>

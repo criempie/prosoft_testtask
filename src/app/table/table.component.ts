@@ -12,6 +12,7 @@ export interface buttonInColumn {
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
+  public iconSize: string = '24px';
 
   @Input()
   data: any[];
@@ -26,12 +27,18 @@ export class TableComponent implements OnInit {
   @Input()
   buttons?: buttonInColumn[] = [];
 
+  @Input()
+  gridTemplateColumns: string[] = [];
+
   constructor() {
 
   }
 
   ngOnInit(): void {
-
+    if (this.buttons) {
+      this.gridTemplateColumns =  this.gridTemplateColumns
+                                      .concat(this.buttons.map(() => this.iconSize));
+    }
   }
 
 }

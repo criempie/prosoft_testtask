@@ -4,6 +4,7 @@
   </label>
   <input placeholder="{{ placeholder }}"
          class="text-input__input"
+         [value]="value"
          (change)="onInputChange($event.target)"/>
   <div class="errors">
     <div class="errors__container">

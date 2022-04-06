@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ConsumerInterface, controlsConfigInterface, inputTypes } from "../types/controlsConfig.type";
+import {
+  ConsumerInterface,
+  ConsumerWithoutIdInterface,
+  controlsConfigInterface,
+  inputTypes
+} from "../types/controlsConfig.type";
 import { APIUrl } from "../config";
 import { PlugService } from "./services/plug.service";
 import { buttonInColumn } from "./table/table.component";
@@ -8,8 +13,12 @@ const REQUIRED = () => 'Поле обязательно';
 const MAX_LENGTH = (length: number | string) => `Максимальная длина ${ length }`;
 const EQUAL_LENGTH = (length: number | string) => `Необходима длина ${ length }`;
 
-
 const controlsConfig: controlsConfigInterface = {
+  id: {
+    initValue: null,
+    type: inputTypes.id,
+    hidden: true
+  },
   name: {
     initValue: '',
     type: inputTypes.inputtext,
@@ -59,7 +68,7 @@ const controlsConfig: controlsConfigInterface = {
       const errors: { [key: string]: string } = {};
 
       if (!value) errors['required'] = REQUIRED();
-      if (value.length !== 13) errors['equalLength'] = EQUAL_LENGTH(13);
+      if (value.toString().length !== 13) errors['equalLength'] = EQUAL_LENGTH(13);
 
       if (Object.keys(errors).length === 0) return null
       else return errors
@@ -69,31 +78,54 @@ const controlsConfig: controlsConfigInterface = {
   }
 };
 
+function controlsConfigForEdit(consumer: ConsumerInterface,
+                               controlsConfig: controlsConfigInterface): controlsConfigInterface {
+  const config: controlsConfigInterface = {};
+  const controlsConfigKeys = <[keyof ConsumerInterface]>Object.keys(controlsConfig);
+
+  controlsConfigKeys.forEach(key => {
+    config[key] = {
+      ...controlsConfig[key],
+      initValue: consumer[key]
+    }
+  })
+
+  return config;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  modalAddConsumerFlag = false;
+  modalFlags = {
+    addConsumer: false,
+    editConsumer: false,
+  }
+
   controlsConfig: controlsConfigInterface = controlsConfig;
+  controlsConfigForEdit: controlsConfigInterface;
 
   consumers: ConsumerInterface[] = [];
   consumerFormatters: { [key: string]: (v: any) => any } = {
     name: (v) => v,
-    type: (v) => v === '1' ? "Ф" : v === '2' ? "Ю" : null,
+    type: (v: number) => v === 1 ? "Ф" : v === 2 ? "Ю" : null,
     number: (v) => v
   }
   consumerTableButtons: buttonInColumn[] = [
     {
-      iconPath: "./src/asserts/trash.svg",
+      iconPath: "../assets/trash.svg",
       onClick: this.deleteConsumer.bind(this)
+    },
+    {
+      iconPath: "../assets/edit.svg",
+      onClick: this.openModalEditConsumer.bind(this)
     }
   ]
 
   constructor(private plugService: PlugService) {
     this.closeModalAddConsumer = this.closeModalAddConsumer.bind(this);
-    //this.deleteConsumer = this.deleteConsumer.bind(this);
   }
 
   public ngOnInit() {
@@ -112,21 +144,76 @@ export class AppComponent implements OnInit {
   }
 
   openModalAddConsumer(): void {
-    this.modalAddConsumerFlag = true;
+    this.modalFlags.addConsumer = true;
   }
 
   closeModalAddConsumer(): void {
-    this.modalAddConsumerFlag = false;
+    this.modalFlags.addConsumer = false;
   }
 
-  deleteConsumer(id: number) {
+  closeModalEditConsumer(): void {
+    this.modalFlags.editConsumer = false;
+  }
+
+  openModalEditConsumer(consumer: ConsumerInterface): void {
+    this.controlsConfigForEdit = controlsConfigForEdit(consumer, this.controlsConfig);
+    this.modalFlags.editConsumer = true;
+  }
+
+  deleteConsumer(consumer: ConsumerInterface) {
     if (APIUrl) {
       fetch(`${ APIUrl }/consumers`, {
         method: 'DELETE',
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id: consumer.id })
       })
     } else {
-      this.plugService.deleteConsumer(id);
+      this.plugService.deleteConsumer(consumer.id);
+    }
+  }
+
+  editConsumer(consumer: ConsumerInterface) {
+    if (APIUrl) {
+      fetch(`${ APIUrl }/consumers`, {
+        method: 'PATCH',
+        body: JSON.stringify(consumer)
+      })
+        .then(() => {this.closeModalEditConsumer()})
+        .catch(() => {})
+    } else {
+      this.plugService.editConsumer(consumer);
+      this.closeModalEditConsumer()
+    }
+  }
+
+  addConsumer(consumer: ConsumerWithoutIdInterface) {
+    console.log(consumer)
+    if (APIUrl) {
+      fetch(`${ APIUrl }/consumers`, {
+        method: 'PUT',
+        body: JSON.stringify(consumer)
+      })
+        .then(() => {this.closeModalAddConsumer()})
+        .catch(() => {})
+    } else {
+      this.plugService.putConsumer(consumer);
+      this.closeModalAddConsumer()
+    }
+  }
+
+  addConsumerOutputFormat(data: { [key: string]: any }) {
+    return {
+      name: data['name'],
+      type: Number(data['type']),
+      number: Number(data['number'])
+    }
+  }
+
+  editConsumerOutputFormat(data: { [key: string]: any }) {
+    return {
+      id: Number(data['id']),
+      name: data['name'],
+      type: Number(data['type']),
+      number: Number(data['number'])
     }
   }
 }

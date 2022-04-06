@@ -19,6 +19,9 @@ export class SelectComponent implements ControlValueAccessor {
   @Input()
   label?: string;
 
+  @Input()
+  defaultSelected?: number;
+
   private _value: string;
 
   set value(v: string) {

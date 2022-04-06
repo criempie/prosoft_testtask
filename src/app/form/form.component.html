@@ -2,24 +2,27 @@
       class="form">
   <main class="form__inputs-container">
     <ng-container *ngFor="let key of controlsConfigKeys">
-      <MyInput *ngIf="controlsConfig[key].type === inputTypes.inputtext"
-               [value]="controlsConfig[key].initValue"
-               [label]="controlsConfig[key].inputTitle"
-               [placeholder]="controlsConfig[key].inputPlaceholder"
-               [errors]="form.controls[key].errors"
-               [formControlName]="key">
-      </MyInput>
-      <MySelect *ngIf="controlsConfig[key].type === inputTypes.select"
-                [label]="controlsConfig[key].inputTitle"
-                [options]="controlsConfig[key].selectOptions"
-                [errors]="form.controls[key].errors"
-                [formControlName]="key">
-      </MySelect>
+      <ng-container *ngIf="!controlsConfig[key].hidden">
+        <MyInput *ngIf="controlsConfig[key].type === inputTypes.inputtext"
+                 [value]="controlsConfig[key].initValue"
+                 [label]="controlsConfig[key].inputTitle"
+                 [placeholder]="controlsConfig[key].inputPlaceholder"
+                 [errors]="form.controls[key].errors"
+                 [formControlName]="key">
+        </MyInput>
+        <MySelect *ngIf="controlsConfig[key].type === inputTypes.select"
+                  [defaultSelected]="controlsConfig[key].initValue"
+                  [label]="controlsConfig[key].inputTitle"
+                  [options]="controlsConfig[key].selectOptions"
+                  [errors]="form.controls[key].errors"
+                  [formControlName]="key">
+        </MySelect>
+      </ng-container>
     </ng-container>
     <button class="form__button"
             type="submit"
             (click)="submit()">
-      Добавить
+      {{ submitButtonText }}
     </button>
   </main>
 </form>

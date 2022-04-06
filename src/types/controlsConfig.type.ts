@@ -3,17 +3,21 @@ import { ValidatorFn } from "@angular/forms";
 export enum inputTypes {
   inputtext,
   select,
+  id
+}
+
+export interface controlConfigInterface {
+  initValue: any,
+  type: inputTypes,
+  hidden?: boolean,
+  selectOptions?: selectOptionInterface[],
+  validator?: ValidatorFn,
+  inputTitle?: string,
+  inputPlaceholder?: string,
 }
 
 export interface controlsConfigInterface {
-  [key: string]: {
-    initValue: any,
-    type: inputTypes,
-    selectOptions?: selectOptionInterface[],
-    validator?: ValidatorFn,
-    inputTitle?: string,
-    inputPlaceholder?: string,
-  };
+  [key: string]: controlConfigInterface;
 }
 
 export interface selectOptionInterface {
