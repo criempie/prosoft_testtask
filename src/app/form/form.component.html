@@ -5,6 +5,7 @@
       <ng-container *ngIf="!controlsConfig[key].hidden">
         <MyInput *ngIf="controlsConfig[key].type === inputTypes.inputtext"
                  [value]="controlsConfig[key].initValue"
+                 [type]="controlsConfig[key].inputType"
                  [label]="controlsConfig[key].inputTitle"
                  [placeholder]="controlsConfig[key].inputPlaceholder"
                  [errors]="form.controls[key].errors"

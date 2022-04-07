@@ -9,6 +9,7 @@ export enum inputTypes {
 export interface controlConfigInterface {
   initValue: any,
   type: inputTypes,
+  inputType?: string,
   hidden?: boolean,
   selectOptions?: selectOptionInterface[],
   validator?: ValidatorFn,

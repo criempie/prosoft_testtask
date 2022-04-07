@@ -63,6 +63,7 @@ const controlsConfig: controlsConfigInterface = {
   number: {
     initValue: '',
     type: inputTypes.inputtext,
+    inputType: 'number',
     validator: function (control) {
       const value = control.value;
       const errors: { [key: string]: string } = {};
@@ -186,7 +187,6 @@ export class AppComponent implements OnInit {
   }
 
   addConsumer(consumer: ConsumerWithoutIdInterface) {
-    console.log(consumer)
     if (APIUrl) {
       fetch(`${ APIUrl }/consumers`, {
         method: 'PUT',

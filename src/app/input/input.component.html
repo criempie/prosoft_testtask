@@ -5,6 +5,7 @@
   <input placeholder="{{ placeholder }}"
          class="text-input__input"
          [value]="value"
+         [type]="type"
          (change)="onInputChange($event.target)"/>
   <div class="errors">
     <div class="errors__container">

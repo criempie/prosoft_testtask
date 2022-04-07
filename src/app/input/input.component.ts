@@ -23,6 +23,9 @@ export class InputComponent implements ControlValueAccessor {
   @Input()
   placeholder?: string;
 
+  @Input()
+  type?: string;
+
   private _errors: string[] = [];
 
   @Input()
