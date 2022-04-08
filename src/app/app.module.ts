@@ -9,6 +9,7 @@ import { InputComponent } from './input/input.component';
 import { FormComponent } from './form/form.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SelectComponent } from './select/select.component';
+import { FilterComponent } from './filter/filter.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { SelectComponent } from './select/select.component';
     ModalComponent,
     InputComponent,
     FormComponent,
-    SelectComponent
+    SelectComponent,
+    FilterComponent
   ],
   imports: [
     BrowserModule,

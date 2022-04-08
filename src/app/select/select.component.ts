@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, ValidationErrors } from "@angular/forms";
 import { selectOptionInterface } from "../../types/controlsConfig.type";
 
@@ -21,6 +21,9 @@ export class SelectComponent implements ControlValueAccessor {
 
   @Input()
   defaultSelected?: number;
+
+  @Output()
+  change_: EventEmitter<any> = new EventEmitter;
 
   private _value: string;
 
@@ -64,6 +67,7 @@ export class SelectComponent implements ControlValueAccessor {
   public onSelectChange(target: any) {
     const element = <HTMLSelectElement>target;
 
+    this.change_.emit(this.options?.find(v => element.value === v.value.toString()));
     this.value = element.value;
   }
 }

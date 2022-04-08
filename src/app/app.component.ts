@@ -3,7 +3,7 @@ import {
   ConsumerInterface,
   ConsumerWithoutIdInterface,
   controlsConfigInterface,
-  inputTypes
+  inputTypes, selectOptionInterface
 } from "../types/controlsConfig.type";
 import { APIUrl } from "../config";
 import { PlugService } from "./services/plug.service";
@@ -125,6 +125,17 @@ export class AppComponent implements OnInit {
     }
   ]
 
+  filterOptions: selectOptionInterface[] = [
+    {
+      title: 'Физические лица',
+      value: 1
+    },
+    {
+      title: 'Юридические лица',
+      value: 2
+    }
+  ]
+
   constructor(private plugService: PlugService) {
     this.closeModalAddConsumer = this.closeModalAddConsumer.bind(this);
   }
@@ -215,5 +226,9 @@ export class AppComponent implements OnInit {
       type: Number(data['type']),
       number: Number(data['number'])
     }
+  }
+
+  filterConsumersByType(option: selectOptionInterface | undefined) {
+    this.plugService.consumersFilterSettings = {key: 'type', value: option?.value}
   }
 }

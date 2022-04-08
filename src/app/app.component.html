@@ -22,6 +22,9 @@
   <header>
     <button (click)="openModalAddConsumer()">Добавить потребителя</button>
   </header>
+  <app-filter [options]="filterOptions"
+              (filterFn)="filterConsumersByType($event)">
+  </app-filter>
   <MyTable [data]="consumers"
            [formatters]="consumerFormatters"
            [disabledFields]="['id']"
