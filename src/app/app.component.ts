@@ -5,9 +5,8 @@ import {
   controlsConfigInterface,
   inputTypes, selectOptionInterface
 } from "../types/controlsConfig.type";
-import { APIUrl } from "../config";
-import { PlugService } from "./services/plug.service";
 import { buttonInColumn } from "./table/table.component";
+import { ConsumersService } from "./services/consumers.service";
 
 const REQUIRED = () => 'Поле обязательно';
 const MAX_LENGTH = (length: number | string) => `Максимальная длина ${ length }`;
@@ -136,23 +135,13 @@ export class AppComponent implements OnInit {
     }
   ]
 
-  constructor(private plugService: PlugService) {
+  constructor(private consumersService: ConsumersService) {
     this.closeModalAddConsumer = this.closeModalAddConsumer.bind(this);
   }
 
   public ngOnInit() {
-    if (APIUrl) {
-      fetch(`${ APIUrl }/consumers`, {
-        method: 'GET',
-      })
-        .then(response => {
-          response.json()
-                  .then(data => this.consumers = data);
-        })
-    } else {
-      this.consumers = this.plugService.consumers;
-      this.plugService.subscribe((v) => {this.consumers = v});
-    }
+    this.consumers = this.consumersService.consumers;
+    this.consumersService.subscribe((v) => {this.consumers = v});
   }
 
   openModalAddConsumer(): void {
@@ -172,43 +161,31 @@ export class AppComponent implements OnInit {
     this.modalFlags.editConsumer = true;
   }
 
-  deleteConsumer(consumer: ConsumerInterface) {
-    if (APIUrl) {
-      fetch(`${ APIUrl }/consumers`, {
-        method: 'DELETE',
-        body: JSON.stringify({ id: consumer.id })
-      })
-    } else {
-      this.plugService.deleteConsumer(consumer.id);
-    }
+  addConsumer(consumer: ConsumerWithoutIdInterface) {
+    this.consumersService
+        .addConsumer(consumer)
+        .then(() => {
+          this.closeModalAddConsumer();
+          this.consumersService.updateConsumers();
+        })
+        .catch(e => console.error(e))
   }
 
   editConsumer(consumer: ConsumerInterface) {
-    if (APIUrl) {
-      fetch(`${ APIUrl }/consumers`, {
-        method: 'PATCH',
-        body: JSON.stringify(consumer)
-      })
-        .then(() => {this.closeModalEditConsumer()})
-        .catch(() => {})
-    } else {
-      this.plugService.editConsumer(consumer);
-      this.closeModalEditConsumer()
-    }
+    this.consumersService
+        .editConsumer(consumer)
+        .then(() => {
+          this.closeModalEditConsumer();
+          this.consumersService.updateConsumers();
+        })
+        .catch(e => console.error(e))
   }
 
-  addConsumer(consumer: ConsumerWithoutIdInterface) {
-    if (APIUrl) {
-      fetch(`${ APIUrl }/consumers`, {
-        method: 'PUT',
-        body: JSON.stringify(consumer)
-      })
-        .then(() => {this.closeModalAddConsumer()})
-        .catch(() => {})
-    } else {
-      this.plugService.putConsumer(consumer);
-      this.closeModalAddConsumer()
-    }
+  deleteConsumer(consumer: ConsumerInterface) {
+    this.consumersService
+        .deleteConsumer(consumer)
+        .then(() => {this.consumersService.updateConsumers()})
+        .catch(e => console.error(e))
   }
 
   addConsumerOutputFormat(data: { [key: string]: any }) {
@@ -228,7 +205,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  filterConsumersByType(option: selectOptionInterface | undefined) {
-    this.plugService.consumersFilterSettings = {key: 'type', value: option?.value}
+  filterConsumers(key: keyof ConsumerInterface, value: any) {
+    this.consumersService.setFilterSettings({ key, value });
   }
 }

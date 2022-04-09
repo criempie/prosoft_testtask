@@ -6,23 +6,11 @@ import { Subject, Subscription } from "rxjs";
   providedIn: 'root'
 })
 export class PlugService {
-  private readonly _consumers: Subject<ConsumerInterface[]>;
+  private readonly _consumers: Subject<ConsumerInterface[]> = new Subject;
   private _consumersValue: ConsumerInterface[];
-  private readonly  _consumersFiltered: Subject<ConsumerInterface[]>;
-  private _consumersValueFiltered: ConsumerInterface[];
-
-  private _consumersFilterSettings: {key: keyof ConsumerInterface, value: any} = {
-    key: 'type',
-    value: null
-  }
-  set consumersFilterSettings(newSettings: {key: keyof ConsumerInterface, value: any}) {
-    this._consumersFilterSettings = Object.assign(newSettings, {});
-    this._consumersFiltered.next(this.filterConsumers(this._consumersValue, newSettings));
-  }
 
   get consumers() {
-    console.log(this._consumersValueFiltered)
-    return this._consumersValueFiltered;
+    return this._consumersValue;
   }
 
   putConsumer(consumer: ConsumerWithoutIdInterface) {
@@ -49,25 +37,12 @@ export class PlugService {
     }
   }
 
-  filterConsumers(consumers: ConsumerInterface[], settings: {key: keyof ConsumerInterface, value: any}) {
-    if (!settings.value) return consumers;
-
-    const temp = consumers.slice();
-    return temp.filter(v => v[settings.key] === settings.value);
-  }
-
   subscribe(func: (v: any) => void): Subscription {
-    return this._consumersFiltered.subscribe(func);
+    return this._consumers.subscribe(func);
   }
 
   constructor() {
-    this._consumers = new Subject();
-    this._consumersFiltered = new Subject();
-    this._consumers.subscribe(v => {
-      this._consumersValue = v;
-      this._consumersFiltered.next(this.filterConsumers(v, this._consumersFilterSettings));
-    });
-    this._consumersFiltered.subscribe(v => {this._consumersValueFiltered = v})
+    this._consumers.subscribe(v => { this._consumersValue = v });
     this._consumers.next(require("../../consumers.plug.json").consumers);
   }
 }
