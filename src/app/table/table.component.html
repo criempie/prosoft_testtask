@@ -6,6 +6,7 @@
          [ngStyle]="{gridTemplateColumns: gridTemplateColumns.join(' ')}">
       <ng-container *ngFor="let key of Object.keys(element)">
         <div *ngIf="disabledFields && !disabledFields.includes(key)"
+             title="{{ hints && hints[key] && hints[key](element[key]) }}"
              class="table__cell">
           {{ formatters
         && formatters[key]

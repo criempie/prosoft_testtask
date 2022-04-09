@@ -124,6 +124,10 @@ export class AppComponent implements OnInit {
     }
   ]
 
+  consumerHints: {[key: string]: (v: any) => string | null} = {
+    'type': (v) => v === 1 ? "Физическое лицо" : v === 2 ? "Юридическое лицо" : null
+  }
+
   filterOptions: selectOptionInterface[] = [
     {
       title: 'Физические лица',

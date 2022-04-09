@@ -30,9 +30,8 @@ export class TableComponent implements OnInit {
   @Input()
   gridTemplateColumns: string[] = [];
 
-  constructor() {
-
-  }
+  @Input()
+  hints?: {[key: string]: (v: any) => string | null};
 
   ngOnInit(): void {
     if (this.buttons) {
