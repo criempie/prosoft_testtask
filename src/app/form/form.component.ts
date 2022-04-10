@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { controlsConfigInterface, inputTypes } from "../../types/controlsConfig.type";
+import { controlsConfigInterface, inputTypes } from "../../types/types";
 
 @Component({
   selector: 'MyForm',

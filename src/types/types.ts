@@ -35,3 +35,9 @@ export interface ConsumerWithoutIdInterface {
 export interface ConsumerInterface extends ConsumerWithoutIdInterface {
   id: number;
 }
+
+export interface buttonInColumn {
+  iconPath: string,
+  onClick: (v?: any) => void,
+  alt?: string
+}

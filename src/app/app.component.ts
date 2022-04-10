@@ -1,82 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  buttonInColumn,
   ConsumerInterface,
   ConsumerWithoutIdInterface,
   controlsConfigInterface,
-  inputTypes, selectOptionInterface
-} from "../types/controlsConfig.type";
-import { buttonInColumn } from "./table/table.component";
+  selectOptionInterface
+} from "../types/types";
 import { ConsumersService } from "./services/consumers.service";
+import { controlsConfig } from "./controlsConfig";
 
-const REQUIRED = () => 'Поле обязательно';
-const MAX_LENGTH = (length: number | string) => `Максимальная длина ${ length }`;
-const EQUAL_LENGTH = (length: number | string) => `Необходима длина ${ length }`;
-
-const controlsConfig: controlsConfigInterface = {
-  id: {
-    initValue: null,
-    type: inputTypes.id,
-    hidden: true
-  },
-  name: {
-    initValue: '',
-    type: inputTypes.inputtext,
-    validator: function (control) {
-      const value = control.value;
-      const errors: { [key: string]: string } = {};
-
-      if (!value) errors['required'] = REQUIRED();
-      if (value.length > 255) errors['maxLength'] = MAX_LENGTH(255);
-
-      if (Object.keys(errors).length === 0) return null
-      else return errors
-
-    },
-    inputTitle: 'Имя',
-    inputPlaceholder: 'Введите имя...'
-  },
-  type: {
-    initValue: null,
-    type: inputTypes.select,
-    selectOptions: [
-      {
-        title: 'Физическое лицо',
-        value: 1
-      },
-      {
-        title: 'Юридическое лицо',
-        value: 2
-      }
-    ],
-    validator: function (control) {
-      const value = control.value;
-      const errors: { [key: string]: string } = {};
-
-      if (!value) errors['required'] = REQUIRED();
-
-      if (Object.keys(errors).length === 0) return null
-      else return errors
-    },
-    inputTitle: 'Тип',
-  },
-  number: {
-    initValue: '',
-    type: inputTypes.inputtext,
-    inputType: 'number',
-    validator: function (control) {
-      const value = control.value;
-      const errors: { [key: string]: string } = {};
-
-      if (!value) errors['required'] = REQUIRED();
-      if (value.toString().length !== 13) errors['equalLength'] = EQUAL_LENGTH(13);
-
-      if (Object.keys(errors).length === 0) return null
-      else return errors
-    },
-    inputTitle: 'Номер',
-    inputPlaceholder: 'Введите номер...'
-  }
-};
 
 function controlsConfigForEdit(consumer: ConsumerInterface,
                                controlsConfig: controlsConfigInterface): controlsConfigInterface {
@@ -148,24 +80,24 @@ export class AppComponent implements OnInit {
     this.consumersService.subscribe((v) => {this.consumers = v});
   }
 
-  openModalAddConsumer(): void {
+  public openModalAddConsumer(): void {
     this.modalFlags.addConsumer = true;
   }
 
-  closeModalAddConsumer(): void {
+  public closeModalAddConsumer(): void {
     this.modalFlags.addConsumer = false;
   }
 
-  closeModalEditConsumer(): void {
+  public closeModalEditConsumer(): void {
     this.modalFlags.editConsumer = false;
   }
 
-  openModalEditConsumer(consumer: ConsumerInterface): void {
+  public openModalEditConsumer(consumer: ConsumerInterface): void {
     this.controlsConfigForEdit = controlsConfigForEdit(consumer, this.controlsConfig);
     this.modalFlags.editConsumer = true;
   }
 
-  addConsumer(consumer: ConsumerWithoutIdInterface) {
+  public addConsumer(consumer: ConsumerWithoutIdInterface) {
     this.consumersService
         .addConsumer(consumer)
         .then(() => {
@@ -175,7 +107,7 @@ export class AppComponent implements OnInit {
         .catch(e => console.error(e))
   }
 
-  editConsumer(consumer: ConsumerInterface) {
+  public editConsumer(consumer: ConsumerInterface) {
     this.consumersService
         .editConsumer(consumer)
         .then(() => {
@@ -185,14 +117,14 @@ export class AppComponent implements OnInit {
         .catch(e => console.error(e))
   }
 
-  deleteConsumer(consumer: ConsumerInterface) {
+  public deleteConsumer(consumer: ConsumerInterface) {
     this.consumersService
         .deleteConsumer(consumer)
         .then(() => {this.consumersService.updateConsumers()})
         .catch(e => console.error(e))
   }
 
-  addConsumerOutputFormat(data: { [key: string]: any }) {
+  public addConsumerOutputFormat(data: { [key: string]: any }) {
     return {
       name: data['name'],
       type: Number(data['type']),
@@ -200,7 +132,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  editConsumerOutputFormat(data: { [key: string]: any }) {
+  public editConsumerOutputFormat(data: { [key: string]: any }) {
     return {
       id: Number(data['id']),
       name: data['name'],
@@ -209,7 +141,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  filterConsumers(key: keyof ConsumerInterface, value: any) {
+  public filterConsumers(key: keyof ConsumerInterface, value: any) {
     this.consumersService.setFilterSettings({ key, value });
   }
 }

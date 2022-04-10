@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { selectOptionInterface } from "../../types/controlsConfig.type";
+import { selectOptionInterface } from "../../types/types";
 
 @Component({
   selector: 'app-filter',
@@ -13,11 +13,7 @@ export class FilterComponent {
   @Output()
   filterFn: EventEmitter<selectOptionInterface | undefined> = new EventEmitter;
 
-  constructor() { }
-
   filter(obj: selectOptionInterface) {
     this.filterFn.emit(obj);
   }
-
-
 }

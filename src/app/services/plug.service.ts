@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConsumerInterface, ConsumerWithoutIdInterface } from "../../types/controlsConfig.type";
+import { ConsumerInterface, ConsumerWithoutIdInterface } from "../../types/types";
 import { Subject, Subscription } from "rxjs";
 
 @Injectable({
@@ -13,7 +13,12 @@ export class PlugService {
     return this._consumersValue;
   }
 
-  putConsumer(consumer: ConsumerWithoutIdInterface) {
+  constructor() {
+    this._consumers.subscribe(v => { this._consumersValue = v });
+    this._consumers.next(require("../../consumers.plug.json").consumers);
+  }
+
+  public putConsumer(consumer: ConsumerWithoutIdInterface) {
     this._consumersValue.push(<ConsumerInterface>{
       ...consumer,
       id: Date.now()
@@ -22,11 +27,11 @@ export class PlugService {
     this._consumers.next(this._consumersValue);
   }
 
-  deleteConsumer(id: number) {
+  public deleteConsumer(id: number) {
     this._consumers.next(this._consumersValue.filter(v => v.id !== id));
   }
 
-  editConsumer(consumer: ConsumerInterface) {
+  public editConsumer(consumer: ConsumerInterface) {
     const editableIndex = this._consumersValue.findIndex(c => c.id === consumer.id);
 
     if (editableIndex !== -1) {
@@ -37,12 +42,7 @@ export class PlugService {
     }
   }
 
-  subscribe(func: (v: any) => void): Subscription {
+  public subscribe(func: (v: any) => void): Subscription {
     return this._consumers.subscribe(func);
-  }
-
-  constructor() {
-    this._consumers.subscribe(v => { this._consumersValue = v });
-    this._consumers.next(require("../../consumers.plug.json").consumers);
   }
 }

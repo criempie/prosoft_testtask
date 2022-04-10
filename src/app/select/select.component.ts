@@ -1,6 +1,6 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, ValidationErrors } from "@angular/forms";
-import { selectOptionInterface } from "../../types/controlsConfig.type";
+import { selectOptionInterface } from "../../types/types";
 
 @Component({
   selector: 'MySelect',
@@ -49,8 +49,6 @@ export class SelectComponent implements ControlValueAccessor {
   get errors(): string[] {
     return this._errors;
   }
-
-  constructor() { }
 
   onChange(_: any) {}
 

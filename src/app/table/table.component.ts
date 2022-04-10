@@ -1,10 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-
-export interface buttonInColumn {
-  iconPath: string,
-  onClick: (v?: any) => void,
-  alt?: string
-}
+import { buttonInColumn } from "../../types/types";
 
 @Component({
   selector: 'MyTable',

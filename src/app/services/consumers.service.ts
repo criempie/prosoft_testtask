@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConsumerInterface, ConsumerWithoutIdInterface } from "../../types/controlsConfig.type";
+import { ConsumerInterface, ConsumerWithoutIdInterface } from "../../types/types";
 import { Subject, Subscription } from "rxjs";
 import { APIUrl } from "../../config";
 import { PlugService } from "./plug.service";
@@ -22,7 +22,8 @@ export class ConsumersService {
     value: null
   }
 
-  private static _filter(consumers: ConsumerInterface[], settings: { key: keyof ConsumerInterface | null, value: any }) {
+  private static _filter(consumers: ConsumerInterface[],
+                         settings: { key: keyof ConsumerInterface | null, value: any }) {
     if (!settings.key || !settings.value) return consumers;
 
     const temp = consumers.slice();
@@ -30,20 +31,10 @@ export class ConsumersService {
     return temp.filter(v => v[settings.key] === settings.value);
   }
 
-  public setFilterSettings(settings: { key: keyof ConsumerInterface, value: any }) {
-    this._filterSettings = settings;
-
-    this._consumersViewableSubject
-        .next(ConsumersService._filter(this._consumers, settings));
-  }
-
-  public filter() {
-    this._consumersViewableSubject
-        .next(ConsumersService._filter(this._consumers, this._filterSettings))
-  }
-
-  public subscribe(fn: (v: ConsumerInterface[]) => void): Subscription {
-    return this._consumersViewableSubject.subscribe(fn);
+  private static _fetchConsumers(): Promise<Response> {
+    return fetch(`${ APIUrl }/consumers`, {
+      method: 'GET',
+    })
   }
 
   constructor(private plugService: PlugService) {
@@ -67,10 +58,20 @@ export class ConsumersService {
     }
   }
 
-  private static _fetchConsumers(): Promise<Response> {
-    return fetch(`${ APIUrl }/consumers`, {
-      method: 'GET',
-    })
+  public setFilterSettings(settings: { key: keyof ConsumerInterface, value: any }) {
+    this._filterSettings = settings;
+
+    this._consumersViewableSubject
+        .next(ConsumersService._filter(this._consumers, settings));
+  }
+
+  public filter() {
+    this._consumersViewableSubject
+        .next(ConsumersService._filter(this._consumers, this._filterSettings))
+  }
+
+  public subscribe(fn: (v: ConsumerInterface[]) => void): Subscription {
+    return this._consumersViewableSubject.subscribe(fn);
   }
 
   public updateConsumers() {
@@ -83,7 +84,7 @@ export class ConsumersService {
 
   public deleteConsumer(consumer: ConsumerInterface): Promise<any> {
     if (APIUrl) {
-      return fetch(`${ APIUrl }/consumers/${consumer.id}`, {
+      return fetch(`${ APIUrl }/consumers/${ consumer.id }`, {
         method: 'DELETE'
       })
     } else {
@@ -94,7 +95,7 @@ export class ConsumersService {
 
   public editConsumer(consumer: ConsumerInterface): Promise<any> {
     if (APIUrl) {
-      return fetch(`${ APIUrl }/consumers/${consumer.id}`, {
+      return fetch(`${ APIUrl }/consumers/${ consumer.id }`, {
         method: 'PATCH',
         body: JSON.stringify(consumer)
       })
