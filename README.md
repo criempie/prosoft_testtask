@@ -1,3 +1,7 @@
+![image](https://user-images.githubusercontent.com/56305535/169024475-e346a8a6-6621-42b4-9c69-7c0fd5c64076.png)
+![image](https://user-images.githubusercontent.com/56305535/169024511-2923f5bf-7230-43c4-b165-ac48918dcdf8.png)
+
+
 ## Технологии: 
 - node v16.13.1, 
 - npm v8.1.2, 
